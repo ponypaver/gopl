@@ -18,28 +18,15 @@ import (
 	"golang.org/x/net/html"
 )
 
-func empty(node html.Node) bool {
-	return node.Parent == nil &&
-		node.FirstChild == nil &&
-		node.LastChild == nil &&
-		node.PrevSibling == nil &&
-		node.NextSibling == nil &&
-		node.Type == 0 &&
-		node.DataAtom == 0 &&
-		node.Data == "" &&
-		node.Namespace == "" &&
-		node.Attr == nil
-}
-
-func forEachNode(node *html.Node, target *html.Node, pre, post func(node *html.Node) bool) {
+func forEachNode(node *html.Node, target **html.Node, pre, post func(node *html.Node) bool) {
 	if pre != nil {
 		if pre(node) {
-			*target = *node
+			*target = node
 			return
 		}
 	}
 
-	for c := node.FirstChild; c != nil && empty(*target); c = c.NextSibling {
+	for c := node.FirstChild; c != nil && *target == nil; c = c.NextSibling {
 		forEachNode(c, target, pre, post)
 	}
 
@@ -49,7 +36,7 @@ func forEachNode(node *html.Node, target *html.Node, pre, post func(node *html.N
 }
 
 func ElementByID(doc *html.Node, id string) *html.Node {
-	target := new(html.Node)
+	target := new(*html.Node)
 	pre := func(node *html.Node) bool {
 		if node.Type == html.ElementNode {
 			for i := range node.Attr {
@@ -62,7 +49,7 @@ func ElementByID(doc *html.Node, id string) *html.Node {
 	}
 
 	forEachNode(doc, target, pre, nil)
-	return target
+	return *target
 }
 
 func main() {
