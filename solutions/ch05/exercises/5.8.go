@@ -23,7 +23,12 @@ func empty(node html.Node) bool {
 		node.FirstChild == nil &&
 		node.LastChild == nil &&
 		node.PrevSibling == nil &&
-		node.NextSibling == nil
+		node.NextSibling == nil &&
+		node.Type == 0 &&
+		node.DataAtom == 0 &&
+		node.Data == "" &&
+		node.Namespace == "" &&
+		node.Attr == nil
 }
 
 func forEachNode(node *html.Node, target *html.Node, pre, post func(node *html.Node) bool) {
