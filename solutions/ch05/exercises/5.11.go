@@ -11,8 +11,9 @@ import (
 
 // prereqs maps computer science courses to their prerequisites.
 var prereqs = map[string][]string{
-	"algorithms": {"data structures"},
-	"calculus":   {"linear algebra"},
+	"algorithms":     {"data structures"},
+	"calculus":       {"linear algebra"},
+	"linear algebra": {"calculus"},
 	"compilers": {
 		"data structures",
 		"formal languages",
@@ -39,7 +40,7 @@ func exist(item string, items []string) bool {
 
 func transfer(start string, items []string, m map[string][]string) {
 	if exist(start, items) {
-		fmt.Printf("cycle detected, chain: %v\n", append(items, start))
+		fmt.Printf("cycle detected, chain: %q\n", append(items, start))
 		return
 	}
 
@@ -86,11 +87,11 @@ func main() {
 	//start := "a"
 	//transfer(start, nil)
 	for i, course := range topoSort(deps) {
-		fmt.Printf("%d:\t%s\n", i+1, course)
+		fmt.Printf("%d:\t%q\n", i+1, course)
 	}
 
 	fmt.Println()
 	for i, course := range topoSort(prereqs) {
-		fmt.Printf("%d:\t%s\n", i+1, course)
+		fmt.Printf("%d:\t%q\n", i+1, course)
 	}
 }
